@@ -103,7 +103,7 @@ def checkBoxFrame(values, title) -> list:
 # Window
 
 
-window = sg.Window(title="Scale Generator", layout=[
+window = sg.Window(title="Guitar Practice Tool", layout=[
                    [checkBoxFrame(NOTES, 'Notes'), [checkBoxFrame(ACCIDENTALS, 'Accidentals'), sg.Text('(If none are selected, ♮ will be assumed)')], checkBoxFrame(COMMON_SCALES, 'Common Scales'), checkBoxFrame(MODES, 'Modes'), checkBoxFrame(CHORDS, 'Chords'), [sg.Text("Click 'Next Scale' to randomly pick a scale from the options you have selected.", key='-Readout-')], [sg.Button('Next Challenge', key='-Generate-')]]])
 
 # Event Loop
