@@ -34,20 +34,35 @@ MODES = [
     'locrian',
 ]
 
+CHORDS = [
+    'Major',
+    'Minor',
+    '7',
+    '5',
+    'dim',
+    'dim7',
+    'aug',
+    'sus2',
+    'sus4',
+    'maj7',
+    'm7',
+    '7sus4'
+]
+
 KEYS = {
 
 }
 
-for key in [*NOTES, *ACCIDENTALS, *COMMON_SCALES, *MODES]:
+for key in [*NOTES, *ACCIDENTALS, *COMMON_SCALES, *MODES, *CHORDS]:
     KEYS[key] = True
 
 # Functions
 
 
-def generateScale() -> str:
+def generatePractice() -> str:
     enabledNotes = list(filter(lambda note: KEYS[note], NOTES))
-    enabledScales = list(
-        filter(lambda scale: KEYS[scale], [*COMMON_SCALES, *MODES]))
+    enabledScalesAndChords = list(
+        filter(lambda scale: KEYS[scale], [*COMMON_SCALES, *MODES, *CHORDS]))
     enabledAccidentals = list(filter(lambda acc: KEYS[acc], ACCIDENTALS))
 
     warnings = []
@@ -55,8 +70,8 @@ def generateScale() -> str:
     if (len(enabledNotes) == 0):
         warnings.append('at least one note')
 
-    if (len(enabledScales) == 0):
-        warnings.append('at least one scale')
+    if (len(enabledScalesAndChords) == 0):
+        warnings.append('at least one scale or chord')
 
     if (len(warnings) > 0):
         return 'Please select' + ", and ".join(warnings) + '.'
@@ -69,7 +84,7 @@ def generateScale() -> str:
         accidental = ''
 
     return random.choice(enabledNotes) + accidental + \
-        ' ' + random.choice(enabledScales)
+        ' ' + random.choice(enabledScalesAndChords)
 
 
 # Components
@@ -89,7 +104,7 @@ def checkBoxFrame(values, title) -> list:
 
 
 window = sg.Window(title="Scale Generator", layout=[
-                   [checkBoxFrame(NOTES, 'Notes'), [checkBoxFrame(ACCIDENTALS, 'Accidentals'), sg.Text('(If none are selected, ♮ will be assumed)')], checkBoxFrame(COMMON_SCALES, 'Common Scales'), checkBoxFrame(MODES, 'Modes'), [sg.Text("Click 'Next Scale' to randomly pick a scale from the options you have selected.", key='-Readout-')], [sg.Button('Next Scale', key='-Generate-')]]])
+                   [checkBoxFrame(NOTES, 'Notes'), [checkBoxFrame(ACCIDENTALS, 'Accidentals'), sg.Text('(If none are selected, ♮ will be assumed)')], checkBoxFrame(COMMON_SCALES, 'Common Scales'), checkBoxFrame(MODES, 'Modes'), checkBoxFrame(CHORDS, 'Chords'), [sg.Text("Click 'Next Scale' to randomly pick a scale from the options you have selected.", key='-Readout-')], [sg.Button('Next Challenge', key='-Generate-')]]])
 
 # Event Loop
 
@@ -121,5 +136,10 @@ while True:
         for acc in ACCIDENTALS:
             KEYS[acc] = targetValue
             window['-%s-' % acc].update(targetValue)
+    elif (event == '-Chords-'):
+        targetValue = window[event].get()
+        for chord in CHORDS:
+            KEYS[chord] = targetValue
+            window['-%s-' % chord].update(targetValue)
     elif (event == '-Generate-'):
-        window['-Readout-'].update(generateScale())
+        window['-Readout-'].update(generatePractice())
